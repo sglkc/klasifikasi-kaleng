@@ -1,5 +1,7 @@
+from typing import Sequence, Tuple
 import cv2, time
 import numpy as np
+from cv2.typing import MatLike
 
 __verbose = False
 
@@ -17,77 +19,58 @@ def showd(citra, title='window'):
     cv2.destroyAllWindows()
     exit()
 
-def klasifikasi(file_path: str, show=True, verbose=False):
-    global __verbose
-    __verbose = verbose
-    start_time = time.process_time()
-
-    ## Load
-    log('Memuat citra')
-    citra = cv2.imread(file_path)
-    final_image = citra.copy()
-
-    ## Preprocess
-    ### Grayscaling
-    log('Grayscaling...')
+def grayscale(citra: MatLike, rumus=lambda r,g,b:(0.2126*r)+(0.7152*g)+(0.0722*b)):
     h, w = citra.shape[:2]
-    grayscale = np.zeros((h, w), np.uint8)
+    hasil = np.zeros((h, w), np.uint8)
 
     for y in range(h):
         for x in range(w):
             b, g, r = citra[y, x]
-            pixel = np.ceil((0.2126 * r) + (0.7152 * g) + (0.0722 * b))
+            pixel = np.ceil(rumus(r, g, b))
 
             ## Clipping
             if pixel < 0: pixel = 0
             if pixel > 255: pixel = 255
 
-            grayscale[y, x] = pixel
+            hasil[y, x] = pixel
 
-    ### Thresholding invert
-    log('Thresholding...')
-    threshold = grayscale.copy()
-    thres = 225
+    return hasil
 
-    for y in range(h):
-        for x in range(w):
-            threshold[y, x] = 0 if grayscale[y, x] > thres else 255
-
-    ### Perbesar citra sebelum morfologi
-    log('Perbesar citra...')
-    offset = 100
-    half_offset = offset // 2
-    morfologi = np.zeros((h + offset, w + offset), np.uint8)
+def threshold(citra: MatLike, T: int):
+    h, w = citra.shape[:2]
+    hasil = np.zeros((h, w), np.uint8)
 
     for y in range(h):
         for x in range(w):
-            morfologi[y + half_offset, x + half_offset] = threshold[y, x]
+            hasil[y, x] = 0 if citra[y, x] > T else 255
 
-    ### Morfologi closing
-    log('Morfologi closing...')
-    kernel = cv2.getStructuringElement(cv2.MORPH_ELLIPSE, (32, 32))
-    morfologi = cv2.morphologyEx(morfologi, cv2.MORPH_CLOSE, kernel, iterations=4)
+    return hasil
 
-    ### Crop citra sesudah morfologi
-    log('Cropping...')
-    citra = np.zeros((h, w), np.uint8)
+def padding(citra: MatLike, thickness: int):
+    h, w = citra.shape[:2]
+    hasil = np.zeros((h + thickness * 2, w + thickness * 2), np.uint8)
 
     for y in range(h):
         for x in range(w):
-            citra[y, x] = morfologi[y + half_offset, x + half_offset]
+            hasil[y + thickness, x + thickness] = citra[y, x]
 
-    ## KONTUR
-    log('Mencari kontur...')
-    contours, _ = cv2.findContours(citra, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_NONE)
+    return hasil
 
-    cv2.drawContours(citra, contours, -1, (255, 255, 255), 2)
-    cv2.drawContours(final_image, contours, -1, (0, 255, 255), 2)
+def crop(citra: MatLike, thickness: int):
+    h1, w1 = citra.shape[:2]
+    h2, w2 = h1 - thickness * 2, w1 - thickness * 2
+    hasil = np.zeros((h2, w2), np.uint8)
 
-    ## MEMBUAT BOUNDING BOX DARI KONTUR
-    log('Bounding box...')
+    for y in range(h2):
+        for x in range(w2):
+            hasil[y, x] = citra[y + thickness, x + thickness]
 
-    # atas & kanan adalah nilai minimum jadi ambil dari ukuran citra
-    # bawa & kiri adalah nilai maksimum dari 0
+    return hasil
+
+def bounding_box(citra: MatLike, contours: Sequence[MatLike]):
+
+    # atas & kanan adalah nilai minimum jadi mulai dari ukuran citra
+    # bawah & kiri adalah nilai maksimum, jadi mulai dari 0
     atas, kiri = citra.shape[:2]
     bawah, kanan = 0, 0
 
@@ -103,15 +86,28 @@ def klasifikasi(file_path: str, show=True, verbose=False):
             if atas  > y: atas = y
             if kiri  > x: kiri = x
 
-    # gambar box
-    for img in (citra, final_image):
-        cv2.line(img, (kiri, atas), (kanan, atas), (0, 0, 255), 2)
-        cv2.line(img, (kanan, atas), (kanan, bawah), (0, 0, 255), 2)
-        cv2.line(img, (kanan, bawah), (kiri, bawah), (0, 0, 255), 2)
-        cv2.line(img, (kiri, bawah), (kiri, atas), (0, 0, 255), 2)
+    return atas, kiri, bawah, kanan
 
-    ## MENGHITUNG RASIO ANTARA LATAR & OBJEK
-    log('Menghitung piksel')
+def draw_contours(citra: MatLike, contours: Sequence[MatLike],
+                  color: Tuple[int, int, int], thickness: int):
+    hasil = citra.copy()
+    cv2.drawContours(hasil, contours, -1, color, thickness)
+    return hasil
+
+def draw_box(citra: MatLike, box: Tuple[int, int, int, int],
+             color: Tuple[int, int, int], thickness: int):
+    atas, kiri, bawah, kanan = box
+    hasil = citra.copy()
+
+    cv2.line(hasil, (kiri, atas), (kanan, atas), color, thickness)
+    cv2.line(hasil, (kanan, atas), (kanan, bawah), color, thickness)
+    cv2.line(hasil, (kanan, bawah), (kiri, bawah), color, thickness)
+    cv2.line(hasil, (kiri, bawah), (kiri, atas), color, thickness)
+
+    return hasil
+
+def hitung_piksel(citra: MatLike, box: Tuple[int, int, int, int]):
+    atas, kiri, bawah, kanan = box
     px = 0
     bg = 0
     ob = 0
@@ -124,37 +120,91 @@ def klasifikasi(file_path: str, show=True, verbose=False):
             else:
                 bg += 1
 
-    ## Tampilkan waktu dibutuhkan untuk pengolahan
-    elapsed = round(time.process_time() - start_time, 3)
-    log(f'({elapsed}s)', force=True)
-
     ## TAMPILKAN HASIL RASIO
     bg_px = round(bg / px, 5) if px > 0 else 0
     ob_px = round(ob / px, 5) if px > 0 else 0
     bg_ob = round(bg / ob, 5) if ob > 0 else 0
 
+    return px, bg, ob, bg_px, ob_px, bg_ob
+
+def tampilkan(title: str, citra: MatLike, col=0):
+    cv2.namedWindow(title, cv2.WINDOW_NORMAL)
+    cv2.moveWindow(title, col % 3 * 500 + 50, col // 3 * 450 + 50)
+    cv2.resizeWindow(title, 400, 400)
+    cv2.imshow(title, citra)
+
+def klasifikasi(file_path: str, show=True, verbose=False):
+    global __verbose
+    __verbose = verbose
+    start_time = time.process_time()
+
+    ## Load
+    log('Memuat citra')
+    citra = cv2.imread(file_path)
+
+    ## Preprocess
+    ### Grayscaling
+    log('Grayscaling...')
+    hasil_grayscale = grayscale(citra)
+
+    ### Thresholding invert
+    log('Thresholding...')
+    hasil_threshold = threshold(hasil_grayscale, 225)
+
+    ### Perbesar citra sebelum morfologi
+    log('Perbesar citra...')
+    hasil_perbesar = padding(hasil_threshold, 50)
+
+    ### Morfologi closing
+    log('Morfologi closing...')
+    kernel = cv2.getStructuringElement(cv2.MORPH_ELLIPSE, (32, 32))
+    hasil_closing = cv2.morphologyEx(
+        hasil_perbesar, cv2.MORPH_CLOSE, kernel, iterations=4
+    )
+
+    ### Crop citra sesudah morfologi
+    log('Cropping...')
+    hasil_crop = crop(hasil_closing, 50)
+
+    ## EKSTRAKSI FITUR
+    ekstraksi_fitur = np.zeros_like(citra)
+
+    ### KONTUR
+    log('Mencari kontur...')
+    contours, _ = cv2.findContours(hasil_crop, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_NONE)
+    hasil_kontur = draw_contours(hasil_crop, contours, (255, 255, 255), 2)
+    ekstraksi_fitur = draw_contours(ekstraksi_fitur, contours, (255, 255, 255), 2)
+
+    ### MEMBUAT BOUNDING BOX DARI KONTUR
+    log('Bounding box...')
+    box = bounding_box(hasil_kontur, contours)
+    hasil_bounding = draw_box(hasil_kontur, box, (255, 255, 255), 2)
+    ekstraksi_fitur = draw_box(ekstraksi_fitur, box, (255, 255, 255), 2)
+
+    ## Tampilkan waktu dibutuhkan untuk pengolahan
+    elapsed = round(time.process_time() - start_time, 3)
+    log(f'({elapsed}s)', force=True)
+
+    ## MENGHITUNG RASIO ANTARA LATAR & OBJEK
+    log('Menghitung piksel')
+    px, bg, ob, bg_px, ob_px, bg_ob = hitung_piksel(hasil_bounding, box)
+
+    print("Jumlah Piksel:", px)
     print("Piksel Latar:", bg)
     print("Piksel Objek:", ob)
     print("Latar / Piksel:", bg_px)
     print("Objek / Piksel:", ob_px)
     print("Latar / Objek:", bg_ob)
-    print(flush=True)
+    print(end='', flush=True)
 
     ## TAMPILKAN CITRA
     if show:
-        i = 1
-        windows = [
-            ('Preprocess', citra),
-            ('Hasil', final_image),
-        ]
-
-        for title, img in windows:
-            cv2.namedWindow(title, cv2.WINDOW_NORMAL)
-            cv2.moveWindow(title, i * 500, 300)
-            cv2.resizeWindow(title, 450, 450)
-            cv2.imshow(title, img)
-            i += 1
-
+        tampilkan('Citra Awal', citra, 0)
+        tampilkan('Grayscale', hasil_grayscale, 1)
+        tampilkan('Threshold', hasil_threshold, 2)
+        tampilkan('Perbesar', hasil_perbesar, 3)
+        tampilkan('Closing', hasil_closing, 4)
+        tampilkan('Ekstraksi Fitur', ekstraksi_fitur, 5)
         cv2.waitKey()
         cv2.destroyAllWindows()
 
@@ -164,4 +214,4 @@ def klasifikasi(file_path: str, show=True, verbose=False):
 if __name__ == "__main__":
     file_path = input('Lokasi citra untuk diklasifikasi (dataset/dataset-1.jpg): ') \
     or 'dataset/dataset-1.jpg'
-    klasifikasi(file_path, verbose=True)
+    klasifikasi(file_path, show=True, verbose=True)
