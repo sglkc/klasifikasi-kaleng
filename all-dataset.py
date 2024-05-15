@@ -8,11 +8,12 @@ files = sorted(os.listdir(dataset_dir), key=sort)
 rasio_objek = []
 
 for file in files:
-    print('\n', file, flush=True)
-    rasio = klasifikasi(os.path.join(dataset_dir, file), True)
+    print('\n', file, sep='', end='', flush=True)
+    file_path = os.path.join(dataset_dir, file)
+    rasio = klasifikasi(file_path, show=True, verbose=False)
     rasio_objek.append(rasio)
 
 print("\n\nSELESAI")
-print("Hasil rasio background per pixels dataset")
+print("Hasil dataset rasio background per piksel")
 print("Mean:", round(np.mean(rasio_objek), 5))
 print("Median:", round(np.median(rasio_objek), 5))
