@@ -297,6 +297,17 @@ def analisis(file_path: str, show=True, verbose=False):
     print("Latar / Objek:", bg_ob)
     print(end='', flush=True)
 
+    # Tampilkan rasio pada citra
+    cv2.putText(
+        ekstraksi_fitur, f"Rasio latar: {bg_px}",
+        (12, 24), cv2.FONT_HERSHEY_DUPLEX, 1, (255, 255, 255)
+    )
+
+    cv2.putText(
+        citra, f"Rasio latar: {bg_px}",
+        (12, 24), cv2.FONT_HERSHEY_DUPLEX, 1, (0, 0, 255)
+    )
+
     ## Tampilkan citra jika argumen show = True
     if show:
         tampilkan((
@@ -309,7 +320,7 @@ def analisis(file_path: str, show=True, verbose=False):
         ))
 
     ## Kembalikan rasio background / piksel
-    return bg_px
+    return bg_px, citra, ekstraksi_fitur
 
 # Jika program dijalankan dengan perintah `python analisis.py`
 # jalankan fungsi analisis dengan citra pada input lokasi

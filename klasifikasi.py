@@ -1,11 +1,11 @@
-import sys
-from analisis import analisis
+import sys, cv2
+from analisis import analisis, tampilkan
 
 # Fungsi klasifikasi dengan rasio optimal
 def klasifikasi(file_path: str):
 
     ## Dapatkan rasio dari analisis piksel
-    bg_px = analisis(file_path, show=False, verbose=False)
+    bg_px, citra, hasil = analisis(file_path, show=False, verbose=False)
 
     ## Konstanta kaleng optimal dengan tambahan error margin 0.5%
     optimal = 0.03767 + 0.005
@@ -13,10 +13,26 @@ def klasifikasi(file_path: str):
     ## Jika rasio pada citra melebihi nilai optimal,
     ## maka dikatakan buruk, sebaliknya dikatakan baik
     if bg_px > optimal:
-        print('Bentuk kaleng: [BURUK]')
+        klasifikasi = "BURUK"
     else:
-        print('Bentuk kaleng: [BAIK]')
+        klasifikasi = "BAIK"
 
+    cv2.putText(
+        hasil, f"Klasifikasi: {klasifikasi}",
+        (12, 52), cv2.FONT_HERSHEY_DUPLEX, 1, (255, 255, 255)
+    )
+
+    cv2.putText(
+        citra, f"Klasifikasi : {klasifikasi}",
+        (12, 52), cv2.FONT_HERSHEY_DUPLEX, 1, (0, 0, 255)
+    )
+
+    tampilkan((
+        ('Citra', citra),
+        ('Hasil', hasil)
+    ))
+
+    print(f"Bentuk kaleng: [{klasifikasi}]")
     print(end='', flush=True)
 
 # Jika program dijalankan dengan perintah `python klasifikasi.py`
