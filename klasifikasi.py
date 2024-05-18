@@ -1,3 +1,4 @@
+import sys
 from analisis import analisis
 
 # Fungsi klasifikasi dengan rasio optimal
@@ -21,6 +22,10 @@ def klasifikasi(file_path: str):
 # Jika program dijalankan dengan perintah `python klasifikasi.py`
 # jalankan fungsi klasifikasi dengan citra pada input lokasi
 if __name__ == "__main__":
-    file_path = input('Lokasi citra (dataset/dataset-1.jpg): ') \
-        or 'dataset/dataset-1.jpg'
+    if len(sys.argv) > 1:
+        file_path = sys.argv[1]
+    else:
+        file_path = input('Lokasi citra (dataset/dataset-1.jpg): ') \
+            or 'dataset/dataset-1.jpg'
+
     klasifikasi(file_path)

@@ -1,4 +1,4 @@
-import cv2, time
+import cv2, time, sys
 import numpy as np
 from typing import Iterable, Sequence, Tuple
 from cv2.typing import MatLike
@@ -311,6 +311,10 @@ def analisis(file_path: str, show=True, verbose=False):
 # Jika program dijalankan dengan perintah `python analisis.py`
 # jalankan fungsi analisis dengan citra pada input lokasi
 if __name__ == "__main__":
-    file_path = input('Lokasi citra (dataset/dataset-1.jpg): ') \
-        or 'dataset/dataset-1.jpg'
+    if len(sys.argv) > 1:
+        file_path = sys.argv[1]
+    else:
+        file_path = input('Lokasi citra (dataset/dataset-1.jpg): ') \
+            or 'dataset/dataset-1.jpg'
+
     analisis(file_path, show=False, verbose=True)
