@@ -1,6 +1,6 @@
 import os
 import numpy as np
-from main import analisis
+from analisis import analisis
 
 # Fungsi untuk mengurutkan file sesuai angka pada nama
 sort = lambda f: int(''.join(filter(str.isdigit, f)))
