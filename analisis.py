@@ -218,8 +218,8 @@ def tampilkan(windows: Iterable[Tuple[str, MatLike]]):
     cv2.waitKey()
     cv2.destroyAllWindows()
 
-# Fungsi utama klasifikasi yang menjalankan semua proses pada citra
-def klasifikasi(file_path: str, show=True, verbose=False):
+# Fungsi utama analisis yang menjalankan semua proses pada citra
+def analisis(file_path: str, show=True, verbose=False):
 
     ## Variabel apakah output pada terminal mendetail
     global __verbose
@@ -247,11 +247,11 @@ def klasifikasi(file_path: str, show=True, verbose=False):
 
     ### Morfologi closing
     log('Morfologi closing...')
-    kernel = cv2.getStructuringElement(cv2.MORPH_ELLIPSE, (32, 32))
+    strel = cv2.getStructuringElement(cv2.MORPH_ELLIPSE, (32, 32))
     hasil_closing = cv2.morphologyEx(
         hasil_perbesar,
         cv2.MORPH_CLOSE,
-        kernel,
+        strel,
         iterations=4
     )
 
@@ -271,7 +271,7 @@ def klasifikasi(file_path: str, show=True, verbose=False):
         cv2.CHAIN_APPROX_NONE
     )
     hasil_kontur = draw_contours(hasil_crop, contours, HITAM, 2)
-    ekstraksi_fitur = draw_contours(ekstraksi_fitur, contours, HITAM, 2)
+    ekstraksi_fitur = draw_contours(ekstraksi_fitur, contours, HITAM, 10)
 
     ### MEMBUAT BOUNDING BOX DARI KONTUR
     log('Bounding box...')
@@ -284,7 +284,6 @@ def klasifikasi(file_path: str, show=True, verbose=False):
     log(f'({elapsed}s)', force=True)
 
     ## MENGHITUNG RASIO ANTARA LATAR & OBJEK
-    log('Menghitung piksel')
     px, bg, ob, bg_px, ob_px, bg_ob = hitung_piksel(hasil_bounding, box)
 
     print("Jumlah Piksel:", px)
@@ -309,8 +308,9 @@ def klasifikasi(file_path: str, show=True, verbose=False):
     ## Kembalikan rasio background / piksel
     return bg_px
 
-# Cek jika program dijalankan menggunakan perintah `python main.py`
+# Jika program dijalankan dengan perintah `python analisis.py`
+# jalankan fungsi analisis dengan citra pada input lokasi
 if __name__ == "__main__":
     file_path = input('Lokasi citra (dataset/dataset-1.jpg): ') \
         or 'dataset/dataset-1.jpg'
-    klasifikasi(file_path, show=True, verbose=True)
+    analisis(file_path, show=False, verbose=True)
