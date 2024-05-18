@@ -83,6 +83,14 @@ def padding(citra: MatLike, thickness: int) -> MatLike:
     ## Kembalikan citra hasil
     return hasil
 
+def closing(citra: MatLike, strel: MatLike) -> MatLike:
+    return cv2.morphologyEx(
+        citra,
+        cv2.MORPH_CLOSE,
+        strel,
+        iterations=4
+    )
+
 # Fungsi untuk memotong bingkai pada citra dengan ketebalan tertentu
 def crop(citra: MatLike, thickness: int) -> MatLike:
 
@@ -248,12 +256,7 @@ def analisis(file_path: str, show=True, verbose=False):
     ### Morfologi closing
     log('Morfologi closing...')
     strel = cv2.getStructuringElement(cv2.MORPH_ELLIPSE, (32, 32))
-    hasil_closing = cv2.morphologyEx(
-        hasil_perbesar,
-        cv2.MORPH_CLOSE,
-        strel,
-        iterations=4
-    )
+    hasil_closing = closing(hasil_perbesar, strel)
 
     ### Crop citra sesudah morfologi
     log('Cropping...')
@@ -271,7 +274,7 @@ def analisis(file_path: str, show=True, verbose=False):
         cv2.CHAIN_APPROX_NONE
     )
     hasil_kontur = draw_contours(hasil_crop, contours, HITAM, 2)
-    ekstraksi_fitur = draw_contours(ekstraksi_fitur, contours, HITAM, 10)
+    ekstraksi_fitur = draw_contours(ekstraksi_fitur, contours, HITAM, 2)
 
     ### MEMBUAT BOUNDING BOX DARI KONTUR
     log('Bounding box...')
