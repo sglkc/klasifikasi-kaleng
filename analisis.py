@@ -15,6 +15,15 @@ def log(text, force=False) -> None:
     else:
         print('.', end='', flush=True)
 
+def resize(citra: MatLike, width: int, height: int) -> MatLike:
+    hasil = cv2.resize(
+        citra,
+        (width, height), 
+        interpolation=cv2.INTER_LINEAR
+        )
+    
+    return hasil
+
 # Fungsi grayscaling dengan rumus fungsi yang dapat diubah
 def grayscale(citra: MatLike,
               rumus=lambda r,g,b:(0.2126*r)+(0.7152*g)+(0.0722*b)
@@ -241,6 +250,9 @@ def analisis(file_path: str, show=True, verbose=False):
     citra = cv2.imread(file_path)
 
     ## Preprocess
+    log('Resizing')
+    citra = resize(citra, 400, 400)
+
     ### Grayscaling
     log('Grayscaling...')
     hasil_grayscale = grayscale(citra)
@@ -251,7 +263,7 @@ def analisis(file_path: str, show=True, verbose=False):
 
     ### Perbesar citra sebelum morfologi
     log('Perbesar citra...')
-    hasil_perbesar = padding(hasil_threshold, 50)
+    hasil_perbesar = padding(hasil_threshold, 128)
 
     ### Morfologi closing
     log('Morfologi closing...')
@@ -260,7 +272,7 @@ def analisis(file_path: str, show=True, verbose=False):
 
     ### Crop citra sesudah morfologi
     log('Cropping...')
-    hasil_crop = crop(hasil_closing, 50)
+    hasil_crop = crop(hasil_closing, 128)
 
     ## EKSTRAKSI FITUR
     ekstraksi_fitur = np.zeros_like(citra)
@@ -331,4 +343,4 @@ if __name__ == "__main__":
         file_path = input('Lokasi citra (dataset/dataset-1.jpg): ') \
             or 'dataset/dataset-1.jpg'
 
-    analisis(file_path, show=False, verbose=True)
+    analisis(file_path, show=True, verbose=True)
