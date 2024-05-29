@@ -1,0 +1,182 @@
+bagus1.jpg.........(2.714s)
+Jumlah Piksel: 59760
+Piksel Latar: 1545
+Piksel Objek: 58215
+Latar / Piksel: 0.02585
+Objek / Piksel: 0.97415
+Latar / Objek: 0.02654
+Bentuk kaleng: [BAIK]
+
+rusak1.jpg.........(2.734s)
+Jumlah Piksel: 74778
+Piksel Latar: 9559
+Piksel Objek: 65219
+Latar / Piksel: 0.12783
+Objek / Piksel: 0.87217
+Latar / Objek: 0.14657
+Bentuk kaleng: [BURUK]
+
+bagus2.jpg.........(2.735s)
+Jumlah Piksel: 58233
+Piksel Latar: 2090
+Piksel Objek: 56143
+Latar / Piksel: 0.03589
+Objek / Piksel: 0.96411
+Latar / Objek: 0.03723
+Bentuk kaleng: [BAIK]
+
+rusak2.jpg.........(2.622s)
+Jumlah Piksel: 90652
+Piksel Latar: 17070
+Piksel Objek: 73582
+Latar / Piksel: 0.1883
+Objek / Piksel: 0.8117
+Latar / Objek: 0.23199
+Bentuk kaleng: [BURUK]
+
+bagus3.jpg.........(1.892s)
+Jumlah Piksel: 76296
+Piksel Latar: 3894
+Piksel Objek: 72402
+Latar / Piksel: 0.05104
+Objek / Piksel: 0.94896
+Latar / Objek: 0.05378
+Bentuk kaleng: [BURUK]
+
+rusak3.jpg.........(1.864s)
+Jumlah Piksel: 80878
+Piksel Latar: 12177
+Piksel Objek: 68701
+Latar / Piksel: 0.15056
+Objek / Piksel: 0.84944
+Latar / Objek: 0.17725
+Bentuk kaleng: [BURUK]
+
+bagus4.jpg.........(1.863s)
+Jumlah Piksel: 79712
+Piksel Latar: 1988
+Piksel Objek: 77724
+Latar / Piksel: 0.02494
+Objek / Piksel: 0.97506
+Latar / Objek: 0.02558
+Bentuk kaleng: [BAIK]
+
+rusak4.jpg.........(2.726s)
+Jumlah Piksel: 84250
+Piksel Latar: 7427
+Piksel Objek: 76823
+Latar / Piksel: 0.08815
+Objek / Piksel: 0.91185
+Latar / Objek: 0.09668
+Bentuk kaleng: [BURUK]
+
+bagus5.jpg.........(2.716s)
+Jumlah Piksel: 64860
+Piksel Latar: 2811
+Piksel Objek: 62049
+Latar / Piksel: 0.04334
+Objek / Piksel: 0.95666
+Latar / Objek: 0.0453
+Bentuk kaleng: [BURUK]
+
+rusak5.jpg.........(2.706s)
+Jumlah Piksel: 90880
+Piksel Latar: 19276
+Piksel Objek: 71604
+Latar / Piksel: 0.2121
+Objek / Piksel: 0.7879
+Latar / Objek: 0.2692
+Bentuk kaleng: [BURUK]
+
+bagus6.jpg.........(2.749s)
+Jumlah Piksel: 73960
+Piksel Latar: 2182
+Piksel Objek: 71778
+Latar / Piksel: 0.0295
+Objek / Piksel: 0.9705
+Latar / Objek: 0.0304
+Bentuk kaleng: [BAIK]
+
+rusak6.jpg.........(2.111s)
+Jumlah Piksel: 83080
+Piksel Latar: 27460
+Piksel Objek: 55620
+Latar / Piksel: 0.33052
+Objek / Piksel: 0.66948
+Latar / Objek: 0.49371
+Bentuk kaleng: [BURUK]
+
+bagus7.jpg.........(1.975s)
+Jumlah Piksel: 55536
+Piksel Latar: 1243
+Piksel Objek: 54293
+Latar / Piksel: 0.02238
+Objek / Piksel: 0.97762
+Latar / Objek: 0.02289
+Bentuk kaleng: [BAIK]
+
+rusak7.jpg.........(1.861s)
+Jumlah Piksel: 99660
+Piksel Latar: 17432
+Piksel Objek: 82228
+Latar / Piksel: 0.17491
+Objek / Piksel: 0.82509
+Latar / Objek: 0.212
+Bentuk kaleng: [BURUK]
+
+bagus8.jpg.........(1.855s)
+Jumlah Piksel: 83709
+Piksel Latar: 2082
+Piksel Objek: 81627
+Latar / Piksel: 0.02487
+Objek / Piksel: 0.97513
+Latar / Objek: 0.02551
+Bentuk kaleng: [BAIK]
+
+rusak8.jpg.........(1.874s)
+Jumlah Piksel: 70675
+Piksel Latar: 15994
+Piksel Objek: 54681
+Latar / Piksel: 0.2263
+Objek / Piksel: 0.7737
+Latar / Objek: 0.2925
+Bentuk kaleng: [BURUK]
+
+bagus9.jpg.........(1.862s)
+Jumlah Piksel: 58533
+Piksel Latar: 1650
+Piksel Objek: 56883
+Latar / Piksel: 0.02819
+Objek / Piksel: 0.97181
+Latar / Objek: 0.02901
+Bentuk kaleng: [BAIK]
+
+rusak9.jpg.........(1.859s)
+Jumlah Piksel: 103356
+Piksel Latar: 19007
+Piksel Objek: 84349
+Latar / Piksel: 0.1839
+Objek / Piksel: 0.8161
+Latar / Objek: 0.22534
+Bentuk kaleng: [BURUK]
+
+bagus10.jpg.........(1.864s)
+Jumlah Piksel: 84672
+Piksel Latar: 2782
+Piksel Objek: 81890
+Latar / Piksel: 0.03286
+Objek / Piksel: 0.96714
+Latar / Objek: 0.03397
+Bentuk kaleng: [BAIK]
+
+rusak10.jpg.........(1.853s)
+Jumlah Piksel: 61480
+Piksel Latar: 14567
+Piksel Objek: 46913
+Latar / Piksel: 0.23694
+Objek / Piksel: 0.76306
+Latar / Objek: 0.31051
+Bentuk kaleng: [BURUK]
+
+BAIK = 8 / 10
+BURUK = 10 / 10
